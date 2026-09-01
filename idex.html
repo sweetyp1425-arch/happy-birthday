@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happiest Birthday, My Love! 🎀🎂✨</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@700&family=Fredoka:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* ==========================================================================
+           1. PASTEL DREAM WORLD & THEME SETUP
+           ========================================================================== */
+        :root {
+            --bg-grad-1: linear-gradient(135deg, #ffeef2 0%, #ffdae9 40%, #e8dff5 100%);
+            --bg-grad-2: linear-gradient(160deg, #fff0f5 0%, #ffd1dc 50%, #f3d5ff 100%);
+            --bg-grad-3: linear-gradient(135deg, #fce1e4 0%, #fcf4dd 50%, #ddedf8 100%);
+            --accent-rose: #ff477e;
+            --accent-pink: #ff70a6;
+            --accent-gold: #ffb703;
+            --text-dark: #4a2831;
+            --glass-card: rgba(255, 255, 255, 0.72);
+            --glass-border: rgba(255, 255, 255, 0.95);
+            --shadow-dreamy: 0 15px 35px rgba(255, 112, 166, 0.25), 0 5px 15px rgba(0, 0, 0, 0.05);
+            --shadow-glow: 0 0 25px rgba(255, 112, 166, 0.6);
+            --font-hand: 'Caveat', cursive;
+            --font-serif: 'Playfair Display', serif;
+            --font-ui: 'Fredoka', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-dark);
+            background: #fbe4e8;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* App Main Phone Frame */
+        #app-viewport {
+            width: 100vw;
+            height: 100vh;
+            max-width: 440px;
+            max-height: 920px;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-grad-1);
+            box-shadow: 0 25px 60px rgba(186, 101, 131, 0.3);
+            display: flex;
+            flex-direction: column;
+            transition: background 1s ease;
+        }
+
+        @media (min-width: 480px) {
+            #app-viewport {
+                border-radius: 42px;
+                height: 92vh;
+                border: 10px solid rgba(255, 255, 255, 0.9);
+            }
+        }
+
+        /* Ambient Layer Canvas */
+        #fx-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Floating Light Leak FX */
+        .light-leak {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,182,193,0) 70%);
+            pointer-events: none;
+            z-index: 1;
+            animation: floatGlow 10s infinite alternate ease-in-out;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(-30px, -30px) scale(1); opacity: 0.6; }
+            100% { transform: translate(100px, 150px) scale(1.3); opacity: 0.9; }
+        }
+
+        /* Screen Wrapper Setup */
+        .screen {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.92) translateY(20px);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            z-index: 5;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .screen.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+            z-index: 10;
+        }
+
+        /* Controls Top Bar */
+        .top-bar {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: var(--glass-card);
+            backdrop-filter: blur(12px);
+            border: 2px solid var(--glass-border);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-dreamy);
+            transition: transform 0.2s;
+        }
+
+        .icon-btn:active {
+            transform: scale(0.88);
+        }
+
+        /* Standard Premium Primary Button */
+        .btn-primary {
+            background: linear-gradient(135deg, #ff477e, #ff70a6);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 35px;
+            font-family: var(--font-ui);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 71, 126, 0.4);
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: auto;
+            align-self: center;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.94);
+            box-shadow: 0 5px 12px rgba(255, 71, 126, 0.3);
+        }
+
+        /* Polaroid Photo Frame Element */
+        .polaroid-card {
+            background: #ffffff;
+            padding: 12px 12px 30px 12px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-dreamy);
+            transform: rotate(-3deg);
+            transition: all 0.3s ease;
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        .polaroid-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            display: block;
+        }
+
+        .polaroid-card .caption {
+            font-family: var(--font-hand);
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 700;
+        }
+
+        /* Cute Ribbon/Bow Accent */
+        .bow-accent {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.2rem;
+            z-index: 15;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        /* ==========================================================================
+           2. SCREEN 1: SECRET PASSWORD
+           ========================================================================== */
+        #screen-1 {
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 35px;
+            padding-bottom: 35px;
+        }
+
+        .title-group {
+            text-align: center;
+        }
+
+        .title-group h2 {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            color: var(--text-dark);
+            text-shadow: 0 2px 10px rgba(255,255,255,0.8);
+        }
+
+        .title-group p {
+            font-size: 1rem;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        .passcode-box {
+            background: var(--glass-card);
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 20px;
+            width: 100%;
+            box-shadow: var(--shadow-dreamy);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .dots-row {
+            display: flex;
+            gap: 16px;
+            margin: 10px 0 15px 0;
+        }
+
+        .dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2.5px solid var(--accent-rose);
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .dot.filled {
+            background: var(--accent-rose);
+            box-shadow: var(--shadow-glow);
+            transform: scale(1.15);
+        }
+
+        .hint-message {
+            font-size: 0.9rem;
+            color: var(--accent-rose);
+            min-height: 42px;
+            text-align: center;
+            font-weight: 600;
+            padding: 0 10px;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 260px;
+            margin-top: 10px;
+        }
+
+        .key {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1.5px solid #ffffff;
+            padding: 14px;
+            border-radius: 50%;
+            aspect-ratio: 1;
+            font-family: var(--font-ui);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            transition: all 0.15s ease;
+        }
+
+        .key:active {
+            background: var(--accent-pink);
+            color: #fff;
+            transform: scale(0.9);
+        }
+
+        .shake-anim {
+            animation: errorShake 0.4s ease-in-out;
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        /* ==========================================================================
+           3. SCREEN 2: BIRTHDAY REVEAL & OPENING ENVELOPE
+           ========================================================================== */
+        #screen-2 {
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .envelope-container {
+            width: 290px;
+            height: 200px;
+            position: relative;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .envelope-base {
+            width: 100%;
+            height: 100%;
+            background: #ffb3c1;
+            border-radius: 16px;
+            box-shadow: var(--shadow-dreamy);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .envelope-flap-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 145px solid transparent;
+            border-right: 145px solid transparent;
+            border-top: 110px solid #ff8fa3;
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 4;
+        }
+
+        .wax-seal-btn {
+            position: absolute;
+            top: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: var(--accent-rose);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 6px 15px rgba(255, 71, 126, 0.4);
+            z-index: 5;
+            transition: all 0.3s;
+        }
+
+        .letter-modal {
+            position: fixed;
+            inset: 20px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 28px 22px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(120%);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow-y: auto;
+        }
+
+        .letter-modal.open {
+            transform: translateY(0);
+        }
+
+        .letter-text-body {
+            font-family: var(--font-hand);
+            font-size: 1.55rem;
+            line-height: 1.5;
+            color: var(--text-dark);
+            text-align: left;
+        }
+
+        /* ==========================================================================
+           4. SCREEN 3: HAMMY'S CUTEST CORNER
+           ========================================================================== */
+        #screen-3 {
+            align-items: center;
+            padding-top: 30px;
+        }
+
+        .hammy-card-box {
+            background: var(--glass-card);
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 24px 20px;
+            width: 100%;
+            box-shadow: var(--shadow-dreamy);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .hammy-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 6px solid #ffffff;
+            box-shadow: var(--shadow-glow);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .hammy-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hammy-dialogue {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 18px;
+            margin-top: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            font-family: var(--font-hand);
+            font-size: 1.4rem;
+            line-height: 1.45;
+            color: var(--text-dark);
+            display: none;
+            position: relative;
+            text-align: left;
+        }
+
+        .hammy-dialogue::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 10px 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent #ffffff transparent;
+        }
+
+        /* ==========================================================================
+           5. SCREEN 4: INTERACTIVE GIFTS & PHOTO GALLERY
+           ========================================================================== */
+        #screen-4 {
+            padding-top: 30px;
+        }
+
+        .gifts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .gift-tile {
+            background: var(--glass-card);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--glass-border);
+            border-radius: 26px;
+            padding: 22px 12px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-dreamy);
+            transition: all 0.25s ease;
+        }
+
+        .gift-tile:active {
+            transform: scale(0.92);
+        }
+
+        .gift-tile .emoji {
+            font-size: 2.8rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .gift-tile .title {
+            font-family: var(--font-ui);
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-dark);
+        }
+
+        /* Modal Overlay for Gifts */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(40, 20, 30, 0.45);
+            backdrop-filter: blur(10px);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 28px 22px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        /* Interactive Bouquet Builder */
+        .bouquet-stage {
+            font-size: 3.2rem;
+            min-height: 130px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            margin: 15px 0;
+        }
+
+        /* ==========================================================================
+           6. SCREEN 5: HIDDEN HEARTS GAME
+           ========================================================================== */
+        #screen-5 {
+            position: relative;
+            padding-top: 30px;
+        }
+
+        .game-area {
+            position: relative;
+            flex: 1;
+            background: rgba(255, 255, 255, 0.45);
+            border: 2.5px dashed rgba(255, 255, 255, 0.9);
+            border-radius: 32px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .target-heart {
+            position: absolute;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            animation: pulseHeart 2s infinite alternate;
+        }
+
+        @keyframes pulseHeart {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.18); }
+        }
+
+        .target-heart.found {
+            opacity: 0.2;
+            pointer-events: none;
+            transform: scale(1.6);
+        }
+
+        /* Decoy Items */
+        .decoy {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        /* ==========================================================================
+           7. SCREEN 6: GRAND CELEBRATION FINALE
+           ========================================================================== */
+        #screen-6 {
+            align-items: center;
+            text-align: center;
+            padding-top: 30px;
+        }
+
+        .cake-stage {
+            position: relative;
+            margin: 25px 0 15px 0;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .cake-emoji {
+            font-size: 6.5rem;
+            filter: drop-shadow(0 12px 20px rgba(0,0,0,0.12));
+        }
+
+        .flame-particle {
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            animation: flameFlicker 0.5s infinite alternate;
+        }
+
+        .flame-particle.extinguished {
+            display: none;
+        }
+
+        @keyframes flameFlicker {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.85; }
+            100% { transform: translateX(-50%) scale(1.25); opacity: 1; filter: drop-shadow(0 0 12px #ffb703); }
+        }
+
+        .blessing-card {
+            background: var(--glass-card);
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 22px 18px;
+            font-family: var(--font-hand);
+            font-size: 1.45rem;
+            line-height: 1.5;
+            color: var(--text-dark);
+            box-shadow: var(--shadow-dreamy);
+            text-align: left;
+            margin-bottom: 15px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-viewport">
+        <div class="light-leak"></div>
+
+        <canvas id="fx-canvas"></canvas>
+
+        <div class="top-bar">
+            <button class="icon-btn" id="audio-toggle" onclick="toggleAudio()">🎵</button>
+        </div>
+
+        <audio id="bg-music" loop>
+            <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=sweet-love-111678.mp3" type="audio/mpeg">
+        </audio>
+
+        <div class="screen active" id="screen-1">
+            <div class="title-group">
+                <h2>Hey you… 👀</h2>
+                <p>I made something special for you.</p>
+            </div>
+
+            <div class="polaroid-card">
+                <div class="bow-accent">🎀</div>
+                <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80" alt="Us" id="PHOTO_1">
+                <div class="caption">Only one person knows the key... 🔒</div>
+            </div>
+
+            <div class="passcode-box">
+                <div class="dots-row" id="passcode-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+
+                <div class="hint-message" id="passcode-hint">Enter our secret code ❤️</div>
+
+                <div class="keypad">
+                    <button class="key" onclick="enterDigit('1')">1</button>
+                    <button class="key" onclick="enterDigit('2')">2</button>
+                    <button class="key" onclick="enterDigit('3')">3</button>
+                    <button class="key" onclick="enterDigit('4')">4</button>
+                    <button class="key" onclick="enterDigit('5')">5</button>
+                    <button class="key" onclick="enterDigit('6')">6</button>
+                    <button class="key" onclick="enterDigit('7')">7</button>
+                    <button class="key" onclick="enterDigit('8')">8</button>
+                    <button class="key" onclick="enterDigit('9')">9</button>
+                    <button class="key" style="opacity: 0.4;">🔒</button>
+                    <button class="key" onclick="enterDigit('0')">0</button>
+                    <button class="key" onclick="deleteDigit()">⌫</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="screen-2">
+            <h1 style="font-family: var(--font-serif); font-size: 2.3rem; color: var(--text-dark);">
+                Happiest Birthday,<br>My Love 💕
+            </h1>
+            <p style="font-family: var(--font-ui); color: var(--accent-rose); font-weight: 600;">I have something to tell you… 🥺</p>
+
+            <div class="envelope-container" onclick="openEnvelope()">
+                <div class="envelope-base">
+                    <div class="envelope-flap-top" id="envelope-flap"></div>
+                    <div class="wax-seal-btn" id="envelope-seal">❤️</div>
+                </div>
+            </div>
+
+            <div class="letter-modal" id="letter-modal">
+                <div class="letter-text-body">
+                    Yes, we're celebrating virtually… but for today, let's forget the distance for a little while. 🥺💕<br><br>
+                    Imagine I'm right there beside you — giving you the biggest hug, holding you close, annoying you, laughing with you, stealing a little piece of your birthday cake… and probably annoying you again. 😂❤️<br><br>
+                    I wish I could actually be there to see your smile, wish you while looking into your eyes, give you a proper birthday hug and make this day even more special for you. 🫂<br><br>
+                    So until I can do all of that, let this little surprise be my way of being there with you. ❤️<br><br>
+                    For these few moments, I hope it feels like we're together — celebrating, laughing, hugging, and making another little memory of us. 🥹💕<br><br>
+                    Happy Birthday again, my love. ❤️<br>
+                    Now come on… I have A LOT more planned for you. 👀🎁
+                </div>
+                <button class="btn-primary" onclick="triggerPlayfulFakeout()">BUT WAIT… 👀</button>
+            </div>
+        </div>
+
+        <div class="screen" id="screen-3">
+            <h2 style="font-family: var(--font-serif); font-size: 2.2rem;">WAIT… 👀</h2>
+            <p style="font-family: var(--font-ui); font-size: 1rem;">WE FORGOT SOMEONE.</p>
+
+            <div class="hammy-card-box">
+                <div class="hammy-avatar">
+                    <img src="https://images.unsplash.com/photo-1425082661705-1834bfd09dca?auto=format&fit=crop&w=600&q=80" alt="Hammy" id="HAMMY_PHOTO">
+                </div>
+                <p style="font-family: var(--font-ui); font-weight: 600;">Someone wanted to wish you Happy Birthday too… 🐹💕</p>
+
+                <button class="btn-primary" id="hammy-speak-btn" onclick="revealHammyTalk()" style="margin-top: 15px;">LET HIM SPEAK 🐹</button>
+
+                <div class="hammy-dialogue" id="hammy-dialogue">
+                    Hii Daddy… 🐹💕<br><br>
+                    I miss youuuu so much! 🥺 Who's going to come play with me, give me my treats and give me those gentle little cuddles?<br><br>
+                    Sometimes I look around and wonder where you are… and I miss having you close. 🥹🐹 Even my tiny little heart misses you, you know? 💕<br><br>
+                    So please come see me soon, okay? I'm waiting for you… and I have lots of playing, cuddling and snack time saved for you! 🐹✨<br><br>
+                    Come home soon, Daddy. Love yaaaa! 🐹💕✨
+                </div>
+            </div>
+
+            <button class="btn-primary" id="hammy-next-btn" style="display: none; margin-top: 20px;" onclick="goToScreen(4)">
+                LET'S GO →
+            </button>
+        </div>
+
+        <div class="screen" id="screen-4">
+            <h2 style="font-family: var(--font-serif); font-size: 2rem; text-align: center;">Okay… now it's my turn. 🥺💕</h2>
+            <p style="text-align: center; font-size: 0.95rem; margin-top: 4px;">I have a few little things for you…</p>
+
+            <div class="gifts-grid">
+                <div class="gift-tile" onclick="openGiftModal('hug')">
+                    <span class="emoji">🫂</span>
+                    <span class="title">HUG</span>
+                </div>
+                <div class="gift-tile" onclick="openGiftModal('kiss')">
+                    <span class="emoji">💋</span>
+                    <span class="title">KISS</span>
+                </div>
+                <div class="gift-tile" onclick="openGiftModal('secret')">
+                    <span class="emoji">🤫</span>
+                    <span class="title">SECRET</span>
+                </div>
+                <div class="gift-tile" onclick="openGiftModal('roses')">
+                    <span class="emoji">🌹</span>
+                    <span class="title">FOR YOU</span>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: auto;">
+                <p style="font-family: var(--font-ui); font-size: 0.9rem; margin-bottom: 8px;">Okay… one more surprise. 👀</p>
+                <button class="btn-primary" onclick="goToScreen(5)">TAKE ME THERE →</button>
+            </div>
+
+            <div class="modal-overlay" id="gift-modal-overlay">
+                <div class="modal-card" id="modal-card-content">
+                    </div>
+            </div>
+        </div>
+
+        <div class="screen" id="screen-5">
+            <h2 style="font-family: var(--font-serif); font-size: 2rem; text-align: center;">I hid something for you… 👀</h2>
+            <div style="font-family: var(--font-ui); font-weight: 700; color: var(--accent-rose); text-align: center; margin-top: 4px;" id="game-status-label">
+                Find the 5 hidden hearts. ❤️ (0/5)
+            </div>
+
+            <div class="game-area" id="game-area">
+                <span class="decoy" style="top: 15%; left: 12%; font-size: 2.2rem;">🎈</span>
+                <span class="decoy" style="top: 68%; left: 78%; font-size: 2.5rem;">🎁</span>
+                <span class="decoy" style="top: 80%; left: 18%; font-size: 2.2rem;">🌸</span>
+                <span class="decoy" style="top: 25%; left: 75%; font-size: 2rem;">🎀</span>
+
+                <span class="target-heart" style="top: 14%; left: 16%;" onclick="heartFound(this)">❤️</span>
+                <span class="target-heart" style="top: 70%; left: 80%;" onclick="heartFound(this)">💖</span>
+                <span class="target-heart" style="top: 32%; left: 42%;" onclick="heartFound(this)">💕</span>
+                <span class="target-heart" style="top: 82%; left: 22%;" onclick="heartFound(this)">💗</span>
+                <span class="target-heart" style="top: 48%; left: 84%;" onclick="heartFound(this)">💓</span>
+            </div>
+
+            <div id="game-win-panel" style="display: none; text-align: center; margin-top: auto;">
+                <p style="font-family: var(--font-ui); font-weight: 600; color: var(--accent-rose); margin-bottom: 10px;">
+                    You found them all! ❤️<br>
+                    But you haven't found the biggest one yet… 👀
+                </p>
+                <button class="btn-primary" onclick="goToScreen(6)">FIND IT →</button>
+            </div>
+        </div>
+
+        <div class="screen" id="screen-6">
+            <h2 style="font-family: var(--font-serif); font-size: 2rem;">Make a wish, birthday boy… ✨</h2>
+
+            <div class="cake-stage" onclick="blowOutCandle()">
+                <span class="flame-particle" id="candle-flame">🔥</span>
+                <div class="cake-emoji">🎂</div>
+            </div>
+
+            <div class="blessing-card">
+                On your birthday, I just wish that you always stay happy, healthy and surrounded by love. ❤️<br><br>
+                May this new year of your life bring you everything you've been wishing for, and may every dream you carry in your heart come true.<br><br>
+                May you always have reasons to smile, people who truly love you, and the strength to get through every difficult day.<br><br>
+                And I hope I get to be there beside you for as many of those beautiful moments as possible. 🥺❤️<br><br>
+                You deserve all the happiness in the world, my love.<br><br>
+                <span style="color: var(--accent-rose); font-weight: 700;">
+                    And now… please come meet me. 🥺❤️<br>
+                    I'm waiting for you.<br>
+                    I'm missing you so, so much.<br><br>
+                    I just want to see you, hug you, hold you close, and not let go for a while. 🫂<br><br>
+                    I love you so much, my birthday boy. ❤️<br>
+                    More than this little website could ever explain.<br><br>
+                    Come soon… I'm waiting for you. ❤️<br><br>
+                    Happiest Birthday, My Love. 🎂❤️
+                </span>
+            </div>
+
+            <button class="btn-primary" onclick="triggerFinalHugEffect()">ONE LAST HUG? 🫂</button>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           EASY PHOTO CONFIGURATION SECTION
+           Replace the URLs below with your actual image paths/filenames!
+           ========================================================================== */
+        const PHOTO_GALLERY = {
+            PHOTO_1: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80",
+            PHOTO_2: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80",
+            PHOTO_3: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80",
+            PHOTO_4: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=600&q=80",
+            PHOTO_5: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80",
+            PHOTO_6: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=600&q=80",
+            HAMMY_PHOTO: "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?auto=format&fit=crop&w=600&q=80"
+        };
+
+        // Passcode State Management
+        let currentPasscode = "";
+        const TARGET_PASSCODE = "1405";
+
+        // Dynamic Backgrounds for Screens
+        const SCREEN_BACKGROUNDS = {
+            1: "linear-gradient(135deg, #ffeef2 0%, #ffdae9 40%, #e8dff5 100%)",
+            2: "linear-gradient(160deg, #fff0f5 0%, #ffd1dc 50%, #f3d5ff 100%)",
+            3: "linear-gradient(135deg, #ffe5ec 0%, #f3d5ff 100%)",
+            4: "linear-gradient(160deg, #fff0f5 0%, #ffd6e0 100%)",
+            5: "linear-gradient(135deg, #e2d4f0 0%, #ffe5ec 100%)",
+            6: "linear-gradient(160deg, #ffd1dc 0%, #ffe5ec 50%, #e2d4f0 100%)"
+        };
+
+        function goToScreen(screenNumber) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            const targetScreen = document.getElementById(`screen-${screenNumber}`);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+            }
+
+            // Change background dynamically
+            document.getElementById('app-viewport').style.background = SCREEN_BACKGROUNDS[screenNumber];
+
+            // Trigger confetti burst on screen 2
+            if (screenNumber === 2) {
+                triggerConfetti();
+            }
+        }
+
+        /* Passcode Functions */
+        function enterDigit(digit) {
+            if (currentPasscode.length < 4) {
+                currentPasscode += digit;
+                updateDotsUI();
+            }
+
+            if (currentPasscode.length === 4) {
+                validatePasscode();
+            }
+        }
+
+        function deleteDigit() {
+            currentPasscode = currentPasscode.slice(0, -1);
+            updateDotsUI();
+        }
+
+        function updateDotsUI() {
+            const dots = document.querySelectorAll('#passcode-dots .dot');
+            dots.forEach((dot, index) => {
+                if (index < currentPasscode.length) {
+                    dot.classList.add('filled');
+                } else {
+                    dot.classList.remove('filled');
+                }
+            });
+        }
+
+        function validatePasscode() {
+            const hint = document.getElementById('passcode-hint');
+            if (currentPasscode === TARGET_PASSCODE) {
+                hint.innerText = "ACCESS GRANTED ❤️";
+                hint.style.color = "#2b9348";
+                triggerConfetti();
+                setTimeout(() => {
+                    goToScreen(2);
+                }, 800);
+            } else {
+                hint.innerText = "Umm… think harder, babe… 🥺\nYou know this number… it means something to us. ❤️";
+                hint.style.color = "#ff477e";
+                const dotsBox = document.getElementById('passcode-dots');
+                dotsBox.classList.add('shake-anim');
+                setTimeout(() => {
+                    dotsBox.classList.remove('shake-anim');
+                    currentPasscode = "";
+                    updateDotsUI();
+                }, 600);
+            }
+        }
+
+        /* Screen 2 Envelope Handler */
+        function openEnvelope() {
+            document.getElementById('envelope-flap').style.transform = 'rotateX(180deg)';
+            document.getElementById('envelope-seal').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('letter-modal').classList.add('open');
+            }, 400);
+        }
+
+        function triggerPlayfulFakeout() {
+            const modal = document.getElementById('letter-modal');
+            modal.innerHTML = `
+                <div style="text-align:center; padding: 50px 10px;">
+                    <h2 style="font-family: var(--font-serif); font-size: 2.2rem;">That's it. 😌</h2>
+                </div>
+            `;
+            setTimeout(() => {
+                modal.innerHTML = `
+                    <div style="text-align:center; padding: 40px 10px;">
+                        <h2 style="font-family: var(--font-serif); font-size: 2.4rem; color: var(--accent-rose);">HAHA… NOPE. 😂❤️</h2>
+                        <p style="font-family: var(--font-ui); font-size: 1.2rem; margin: 15px 0;">We're just getting started, Baby. 👀</p>
+                        <button class="btn-primary" onclick="goToScreen(3)">CONTINUE →</button>
+                    </div>
+                `;
+            }, 1200);
+        }
+
+        /* Screen 3 Hammy Handler */
+        function revealHammyTalk() {
+            document.getElementById('hammy-speak-btn').style.display = 'none';
+            document.getElementById('hammy-dialogue').style.display = 'block';
+            document.getElementById('hammy-next-btn').style.display = 'inline-flex';
+        }
+
+        /* Screen 4 Gifts Modal Logic */
+        let activePhotoIndex = 0;
+        const secretPhotoList = [PHOTO_GALLERY.PHOTO_2, PHOTO_GALLERY.PHOTO_3, PHOTO_GALLERY.PHOTO_4, PHOTO_GALLERY.PHOTO_5, PHOTO_GALLERY.PHOTO_6];
+        let roseAmount = 0;
+
+        function openGiftModal(type) {
+            const overlay = document.getElementById('gift-modal-overlay');
+            const body = document.getElementById('modal-card-content');
+            overlay.style.display = 'flex';
+
+            if (type === 'hug') {
+                body.innerHTML = `
+                    <div style="font-size: 4.5rem; margin-bottom: 10px;">🫂</div>
+                    <p style="font-family: var(--font-hand); font-size: 1.6rem; color: var(--text-dark);">
+                        Consider this your birthday hug… 🫂<br>
+                        Hold on, I'm not letting go yet. 🥺❤️<br><br>
+                        Because if you were here, I probably wouldn't let you go anyway. ❤️
+                    </p>
+                    <button class="btn-primary" onclick="closeGiftModal()" style="margin-top:20px;">Close 🫂</button>
+                `;
+            } else if (type === 'kiss') {
+                body.innerHTML = `
+                    <div style="font-size: 4.5rem; margin-bottom: 10px;">💋</div>
+                    <p style="font-family: var(--font-hand); font-size: 1.6rem; color: var(--text-dark);">
+                        Birthday kiss delivered. 💋❤️<br><br>
+                        Don't complain… you don't get to return this one. 😌💕
+                    </p>
+                    <button class="btn-primary" onclick="closeGiftModal()" style="margin-top:20px;">Close 💋</button>
+                `;
+            } else if (type === 'secret') {
+                activePhotoIndex = 0;
+                renderSecretPhotoView();
+            } else if (type === 'roses') {
+                roseAmount = 1;
+                renderRosesView();
+            }
+        }
+
+        function renderSecretPhotoView() {
+            const body = document.getElementById('modal-card-content');
+            body.innerHTML = `
+                <p style="font-family: var(--font-ui); font-weight:600; margin-bottom: 12px;">Shhh… This one is only for us. 🤫❤️</p>
+                <div class="polaroid-card" onclick="nextSecretPhotoView()">
+                    <img src="${secretPhotoList[activePhotoIndex]}" alt="Memory">
+                    <div class="caption">Tap for next memory 💕 (${activePhotoIndex + 1}/${secretPhotoList.length})</div>
+                </div>
+                <button class="btn-primary" onclick="closeGiftModal()" style="margin-top:15px;">Close 🤫</button>
+            `;
+        }
+
+        function nextSecretPhotoView() {
+            if (activePhotoIndex < secretPhotoList.length - 1) {
+                activePhotoIndex++;
+                renderSecretPhotoView();
+            } else {
+                const body = document.getElementById('modal-card-content');
+                body.innerHTML = `
+                    <p style="font-family: var(--font-hand); font-size: 1.7rem; margin: 20px 0; color: var(--text-dark);">
+                        Our little world. ❤️<br>
+                        And there are still so many memories left to make.
+                    </p>
+                    <button class="btn-primary" onclick="closeGiftModal()">Close 🤫</button>
+                `;
+            }
+        }
+
+        function renderRosesView() {
+            const body = document.getElementById('modal-card-content');
+            let roseDisplay = "🌹".repeat(roseAmount);
+            body.innerHTML = `
+                <p style="font-family: var(--font-ui); font-weight:600;">Someone left this here for you… 🌹</p>
+                <div class="bouquet-stage" onclick="growBouquet()">${roseDisplay}</div>
+                <p style="font-size: 0.85rem; color: #888;">Tap the roses to bloom a bigger bouquet!</p>
+                <button class="btn-primary" onclick="closeGiftModal()" style="margin-top:15px;">Close 🌹</button>
+            `;
+        }
+
+        function growBouquet() {
+            if (roseAmount < 10) {
+                roseAmount += 2;
+                renderRosesView();
+            } else {
+                const body = document.getElementById('modal-card-content');
+                body.innerHTML = `
+                    <div class="bouquet-stage">🌹🌹🌹🌹🌹<br>🌹🌹🌹🌹🌹</div>
+                    <p style="font-family: var(--font-hand); font-size: 1.6rem; margin: 15px 0;">
+                        Okay… I may have gotten a little carried away. 😂🌹<br><br>
+                        For my favourite flower lover. ❤️<br>
+                        This one's from Vish. 🌹💕
+                    </p>
+                    <button class="btn-primary" onclick="closeGiftModal()">Close 🌹</button>
+                `;
+            }
+        }
+
+        function closeGiftModal() {
+            document.getElementById('gift-modal-overlay').style.display = 'none';
+        }
+
+        /* Screen 5 Hidden Hearts Mini Game */
+        let totalHeartsFound = 0;
+        const progressMessages = [
+            "Got one! ❤️",
+            "You're getting closer… 👀",
+            "Halfway there, birthday boy! 💕",
+            "Almost… 🥺",
+            "You found them all! ❤️"
+        ];
+
+        function heartFound(element) {
+            if (!element.classList.contains('found')) {
+                element.classList.add('found');
+                totalHeartsFound++;
+                document.getElementById('game-status-label').innerText = `${progressMessages[totalHeartsFound - 1]} (${totalHeartsFound}/5)`;
+
+                if (totalHeartsFound === 5) {
+                    setTimeout(() => {
+                        document.getElementById('game-win-panel').style.display = 'block';
+                    }, 500);
+                }
+            }
+        }
+
+        /* Screen 6 Finale Cake Handler */
+        function blowOutCandle() {
+            const flame = document.getElementById('candle-flame');
+            if (!flame.classList.contains('extinguished')) {
+                flame.classList.add('extinguished');
+                triggerConfetti();
+            }
+        }
+
+        function triggerFinalHugEffect() {
+            triggerConfetti();
+            alert("Sending you the biggest hug from Vish. ❤️🫂\nLove youuu, Baby. ❤️");
+        }
+
+        /* Confetti Burst Trigger */
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        /* Ambient Floating Particle Canvas Setup */
+        const canvas = document.getElementById('fx-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function spawnParticle() {
+            particlesArray.push({
+                x: Math.random() * canvas.width,
+                y: canvas.height + 20,
+                size: Math.random() * 16 + 10,
+                speed: Math.random() * 1.8 + 0.8,
+                opacity: Math.random() * 0.7 + 0.3,
+                symbol: ['❤️', '✨', '🎈', '🌸', '💖'][Math.floor(Math.random() * 5)]
+            });
+        }
+
+        setInterval(spawnParticle, 700);
+
+        function renderParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach((p, index) => {
+                p.y -= p.speed;
+                ctx.font = `${p.size}px serif`;
+                ctx.globalAlpha = p.opacity;
+                ctx.fillText(p.symbol, p.x, p.y);
+
+                if (p.y < -20) {
+                    particlesArray.splice(index, 1);
+                }
+            });
+            requestAnimationFrame(renderParticles);
+        }
+        renderParticles();
+
+        /* Audio Control */
+        function toggleAudio() {
+            const audio = document.getElementById('bg-music');
+            const button = document.getElementById('audio-toggle');
+            if (audio.paused) {
+                audio.play();
+                button.innerText = "🔊";
+            } else {
+                audio.pause();
+                button.innerText = "🎵";
+            }
+        }
+    </script>
+</body>
+</html>
